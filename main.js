@@ -123,7 +123,40 @@ const snail = (array) => {
     }
     return snail_sort
 }
-  
+// ========================================================
+// Trapping Rain Water
+// Still Have a bug
+const trap = heights => {
+    const valleys = [];
+    for (let peak1Index=0; peak1Index < heights.length; peak1Index++) {
+        const peak1 = heights[peak1Index];
+        if (peak1 > 0) {
+            for (let peak2Index=peak1Index+1; peak2Index < heights.length; peak2Index++) {
+                const peak2 = heights[peak2Index]
+                if (peak1 <= peak2) {
+                    const peaksDistance = (peak2Index+1) - (peak1Index+1) - 1;
+                    if (peaksDistance >= 1) {
+                        valleys.push([peak1Index, peak2Index])
+                        peak1Index = peak2Index-1;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    const waterUnits = valleys.map(valleyRange => {
+        const [peak1Index, peak2Index] = valleyRange;
+        const valleyPeaks = [heights[peak1Index], heights[peak2Index]]
+        const peaksDistance = (peak2Index+1) - (peak1Index+1) -1;
+        const elevation = Math.min(...valleyPeaks);
+        const spacesBetween = heights.slice(peak1Index+1, peak2Index).reduce((acc, x) => acc + x, 0)
+        const waterInValley = (peaksDistance * elevation) - spacesBetween;
+        return waterInValley
+    })
+    const totalWaterUnits = waterUnits.reduce((acc, x) => acc + x, 0)
+    return totalWaterUnits;
+}
+
 
 
 module.exports = {
@@ -131,6 +164,7 @@ module.exports = {
     sym,
     updateInventory,
     permAlone,
-    snail
+    snail,
+    trap
 }
 
